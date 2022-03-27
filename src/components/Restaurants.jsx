@@ -1,12 +1,19 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import LoadingPage from "./LoadingPage";
+import RestaurantItem from "./RestaurantItem";
 
-const Restaurants = () => {
-  const { restos } = useSelector((state) => state.resto);
+const Restaurants = ({ restos }) => {
+  const { isLoading } = useSelector((state) => state.resto);
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
-    <div>
-      he
-      {/* <h4>{restos[0]}</h4> */}
+    <div className="list-restaurant">
+      {restos.map((resto) => (
+        <RestaurantItem key={resto._id} resto={resto} />
+      ))}
     </div>
   );
 };

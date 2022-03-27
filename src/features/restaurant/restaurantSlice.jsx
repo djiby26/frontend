@@ -3,21 +3,32 @@ import RestaurantService from "./restaurantService";
 
 const initialState = {
   restos: [],
-  //   error: false,
+  currentResto: {},
   isLoading: false,
-  isSuccess: false,
-  //   message: "",
 };
 
-export const getRestaurants = createAsyncThunk(
-  "resto/get",
-  async (thunkApi) => {
+export const fetchData = createAsyncThunk("resto/getAll", async (thunkApi) => {
+  try {
+    const response = await RestaurantService.getRestaurants();
+    return response;
+  } catch (error) {
+    if (error) {
+      // console.log(error);
+      return thunkApi.rejectWithValue(error);
+    }
+  }
+});
+
+export const getResto = createAsyncThunk(
+  "resto/getOne",
+  async (id, thunkApi) => {
     try {
-      return await RestaurantService.getRestaurants();
+      const response = await RestaurantService.getOneRestaurant(id);
+      return response;
     } catch (error) {
-      return thunkApi.rejectWithValue(
-        "An error occured while getting Restautants"
-      );
+      if (error) {
+        return thunkApi.rejectWithValue(error);
+      }
     }
   }
 );
@@ -27,10 +38,20 @@ const restaurantSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getRestaurants.fulfilled, (state, action) => {
+    builder.addCase(fetchData.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchData.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.isSuccess = true;
+      // state.isSuccess = true;
       state.restos = action.payload;
+    });
+    builder.addCase(fetchData.rejected, (state, action) => {
+      state.isLoading = false;
+      // state.isSuccess = false;
+    });
+    builder.addCase(getResto.fulfilled, (state, action) => {
+      state.currentResto = action.payload;
     });
   },
 });
