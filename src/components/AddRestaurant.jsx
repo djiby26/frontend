@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
-import { updateResto } from "../features/restaurant/restaurantSlice";
 import { useDispatch } from "react-redux";
+import {
+  addNewResto,
+  toggleAddForm,
+} from "../features/restaurant/restaurantSlice";
 
-const UpdateRestaurant = () => {
+const AddRestaurant = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const clickedResto = useLocation().state;
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
@@ -25,25 +25,14 @@ const UpdateRestaurant = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(
-      updateResto({
-        id: clickedResto._id,
-        data: { name: name, address: address },
-      })
-    );
+    dispatch(addNewResto({ name: name, address: address }));
     setAddress("");
     setName("");
   };
+
   return (
-    <div className="restaurant-update">
-      <div className="restaurant-detail">
-        <div style={{ flex: "2 " }}>
-          <h3>{clickedResto.name}</h3>
-          <h6>{clickedResto.address}</h6>
-        </div>
-        <FaTrash color="red" style={{ height: "3rem" }} />
-      </div>
-      <form onSubmit={handleSubmit} className="update-form" action="">
+    <div className="restaurant-add">
+      <form onSubmit={handleSubmit} className="add-form" action="">
         <input
           value={name}
           onChange={handleChange}
@@ -58,11 +47,19 @@ const UpdateRestaurant = () => {
           placeholder="restaurant address"
           name="address"
         />
-        <input type="submit" />
+        <div>
+          <input
+            onClick={() => {
+              dispatch(toggleAddForm(false));
+            }}
+            value="Cancel"
+            type="button"
+          />
+          <input value="Send" type="submit" />
+        </div>
       </form>
-      {/* <h3>Restaurant {clickedResto.name}</h3> */}
     </div>
   );
 };
 
-export default UpdateRestaurant;
+export default AddRestaurant;
