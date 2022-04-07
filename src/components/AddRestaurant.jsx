@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   addNewResto,
   toggleAddForm,
 } from "../features/restaurant/restaurantSlice";
 
-const AddRestaurant = () => {
+const AddRestaurant = ({ notify }) => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const AddRestaurant = () => {
     dispatch(addNewResto({ name: name, address: address }));
     setAddress("");
     setName("");
+    notify("operation successful");
   };
 
   return (

@@ -9,10 +9,12 @@ import {
   fetchData,
   toggleAddForm,
 } from "./features/restaurant/restaurantSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 function App() {
   const { restos, displayAddForm } = useSelector((state) => state.resto);
   const dispatch = useDispatch();
+  const notify = (text) => toast(text);
 
   useEffect(() => {
     dispatch(fetchData());
@@ -29,13 +31,14 @@ function App() {
         >
           Add Resto
         </button>
-        {displayAddForm && <AddRestaurant />}
+        {displayAddForm && <AddRestaurant notify={notify} />}
         <Routes>
           <Route path="/" element={<Restaurants restos={restos} />} />
           {/* <Route path="/update/:restoId" element={<UpdateRestaurant />} /> */}
           <Route path="/update" element={<UpdateRestaurant />} />
         </Routes>
       </div>
+      <ToastContainer />
     </Router>
   );
 }

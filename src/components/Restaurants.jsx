@@ -9,6 +9,9 @@ const Restaurants = ({ restos }) => {
     return <LoadingPage />;
   }
 
+  let res = 1 + 3;
+
+  console.log(res);
   return (
     <div className="list-restaurant">
       {restos.map((resto) => (
